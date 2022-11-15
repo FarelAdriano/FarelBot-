@@ -89,7 +89,7 @@ module.exports = amin = async (amin, m, chatUpdate, store) => {
 		const fgclink = {key: {participant: "0@s.whatsapp.net","remoteJid": "0@s.whatsapp.net"},"message": {"groupInviteMessage": {"groupJid": "6288227248988-1629970890@g.us","inviteCode": "m","groupName": "ig : saya_asroriamin", "caption": 'Chitoge Kirisaki', 'jpegThumbnail': thumb}}}
 		const fvideo = {key: { fromMe: false,participant: `0@s.whatsapp.net`, ...(m.chat ? { remoteJid: "status@broadcast" } : {}) },message: { "videoMessage": { "title":`${pushname}`, "h": `Hmm`,'seconds': '359996400', 'caption': `${pushname}`, 'jpegThumbnail': thumb}}}
 		const floc = {key : {participant : '0@s.whatsapp.net', ...(m.chat ? { remoteJid: `status@broadcast` } : {}) },message: {locationMessage: {name: 'Chitoge',jpegThumbnail: thumb}}}
-		const fkontak = { key: {participant: `0@s.whatsapp.net`, ...(m.chat ? { remoteJid: `status@broadcast` } : {}) }, message: { 'contactMessage': { 'displayName': 'Asrori Amin', 'vcard': `BEGIN:VCARD\nVERSION:3.0\nN:XL;Asrori Amin,;;;\nFN:Asrori Amin\nitem1.TEL;waid=62895604670507:62895604670507\nitem1.X-ABLabel:Ponsel\nEND:VCARD`, 'jpegThumbnail': thumb, thumbnail: thumb,sendEphemeral: true}}}
+		const fkontak = { key: {participant: `0@s.whatsapp.net`, ...(m.chat ? { remoteJid: `status@broadcast` } : {}) }, message: { 'contactMessage': { 'displayName': 'Asrori Amin', 'vcard': `BEGIN:VCARD\nVERSION:3.0\nN:XL;Asrori Amin,;;;\nFN:Asrori Amin\nitem1.TEL;waid=6288227248988:6288227248988\nitem1.X-ABLabel:Ponsel\nEND:VCARD`, 'jpegThumbnail': thumb, thumbnail: thumb,sendEphemeral: true}}}
 	    const fakestatus = {key: {fromMe: false,participant: `0@s.whatsapp.net`, ...(m.chat ? { remoteJid: "status@broadcast" } : {})},message: { "imageMessage": {"url": "https://mmg.whatsapp.net/d/f/At0x7ZdIvuicfjlf9oWS6A3AR9XPh0P-hZIVPLsI70nM.enc","mimetype": "image/jpeg","caption": 'Chitoge Kirisaki',"fileSha256": "+Ia+Dwib70Y1CWRMAP9QLJKjIJt54fKycOfB2OEZbTU=","fileLength": "28777","height": 1080,"width": 1079,"mediaKey": "vXmRR7ZUeDWjXy5iQk17TrowBzuwRya0errAFnXxbGc=","fileEncSha256": "sR9D2RS5JSifw49HeBADguI23fWDz1aZu4faWG/CyRY=","directPath": "/v/t62.7118-24/21427642_840952686474581_572788076332761430_n.enc?oh=3f57c1ba2fcab95f2c0bb475d72720ba&oe=602F3D69","mediaKeyTimestamp": "1610993486","jpegThumbnail": fs.readFileSync('./image/zens.jpg'),"scansSidecar": "1W0XhfaAcDwc7xh1R8lca6Qg/1bB4naFCSngM2LKO2NoP5RI7K+zLw=="}}}
 		
         // Group
@@ -115,7 +115,7 @@ module.exports = amin = async (amin, m, chatUpdate, store) => {
 		'🍌 : 🍒 : 🔔',
 		'🍐 : 🔔 : 🔔',
 		'🍊 : 🍋 : 🍒',
-		'🍋 : 🍋 : 🍌',
+		'🍋 : 🍋 : ??',
 		'🔔 : 🔔 : 🍇',
 		'🔔 : 🍐 : 🍇',
 		'🔔 : 🔔 : 🔔  Win',
@@ -601,18 +601,9 @@ Ketik *nyerah* untuk menyerah dan mengakui kekalahan`
             }
             break
 	    case 'donasi': case 'sewabot': case 'sewa': case 'buypremium': case 'donate': {
-                donasi = `Terima Kasih Telah Mau Berdonasi
-
-Gopay : 088227248988
-
-Dan Kami Juga Menawarkan Jasa Sewa Bot
-1 Bulan = 5k
-Premium = 10k
-Silahkan Hubungi Wa.me/6288227248988`
-
- amin.hy(m.chat, "USD", donasi, 100000)
-}
-break
+                amin.sendMessage(m.chat, { image: { url: 'https://telegra.ph/file/42f3bc85dfaf730523886.jpg' }, caption: `*Hai Kak ${m.pushName}*\n\n Bot Rental Prices\n⭔ 5k Per Group via Gopay\n\n Premium Price Bot\n⭔ 5k per User 1 bulan\n\nPayment can be via Gopay\n\nFor more details, you can chat with the owner\nhttps://wa.me/6288227248988 (Owner)\n\nDonate For Me : \n\n⭔ Gopay : 088227248988` }, { quoted: m })
+            }
+            break
             case 'chat': {
                 if (!isCreator) throw mess.owner
                 if (!q) throw 'Option : 1. mute\n2. unmute\n3. archive\n4. unarchive\n5. read\n6. unread\n7. delete'
@@ -1751,6 +1742,124 @@ ${cpus.map((cpu, i) => `${i + 1}. ${cpu.model.trim()} (${cpu.speed} MHZ)\n${Obje
 		}
 	    }
 	    break
+case 'mapel':{
+let template = await generateWAMessageFromContent(m.chat, proto.Message.fromObject({
+                listMessage :{
+                    title: `Hi ${pushname}\nSilahkan Pilih Mapel Atau Seragam Hari Apa`,
+                    description: "\n",
+                    buttonText: "Pencet Ini 👍",
+                    footerText: "Asrori Amin",
+                    listType: "SINGLE_SELECT",
+                    sections: [{
+								"title": "OWNER",
+								"rows": [
+									{
+										"title": "ASRORI AMIN",
+										"description": "Pembuat AminBot",
+										"rowId": `${prefix}owner`
+									}
+								]
+							},
+							{
+								"title": "MAPELL",
+								"rows": [
+									{
+										"title": "Senin",
+										"description": "Menampilkan Semua Mapel Hari Senin",
+										"rowId": `${prefix}senin`
+									},
+									{
+										"title": "Selasa",
+										"description": "Menampilkan Semua Mapel Hari Selasa",
+										"rowId": `${prefix}selasa`
+									},
+										{
+										"title": "Rabu",
+										"description": "Menampilkan Semua Mapel Hari Rabu",
+										"rowId": `${prefix}rabu`
+									},
+									{
+										"title": "Kamis",
+										"description": "Menampilkan Semua Mapel Hari Kamis",
+										"rowId": `${prefix}kamis`
+										},
+										{
+											"title": "Jumat",
+										"description": "Menampilkan Semua Mapel Hari Jumat",
+										"rowId": `${prefix}jumat`
+										},
+											{
+											"title": "Sabtu",
+										"description": "Menampilkan Semua Mapel Hari Sabtu",
+										"rowId": `${prefix}sabtu`
+										},
+										]
+										},
+							{
+								"title": "FOTO MAPEL?",
+								"rows": [
+									{
+										"title": "10 A",
+										"description": "Menampilkan Foto Mapel Kelas 10 A",
+										"rowId": `${prefix}fotomapel`
+									}
+								]
+							},
+							{
+								"title": "Info Tentang Owner?",
+								"rows": [
+									{
+										"title": "Chat Owner",
+										"description": "Yang Mau Nomer Owner",
+										"rowId": `${prefix}owner`
+									}
+								]
+							},
+							{
+								"title": "Thanks To",
+								"rows": [
+									{
+										"title": "Contributor",
+										"description": "Menampilkan Orang Yang Ngembangin AminBot",
+										"rowId": `${prefix}thanksto`
+									}
+								]
+							}
+						],
+          listType: 1
+                }
+            }), { userJid: m.chat, quoted: m })
+            amin.relayMessage(m.chat, template.message, { messageId: template.key.id })
+            }
+            break
+case 'senin': {
+                reply('Jam Ke 1 : Character Building *Gus Anam*\nJam Ke 2 : Aswaja *Pak Sumandi*\nJam Ke 3 : Penjas *Bu Evi*\nJam Ke 4 : Penjas *Bu Evi*\nJam Ke 5 : Informatika *Bu Ana*\nJam Ke 6 : Informatika *Bu Ana*\nJam Ke 7 : Ipas IPS *Bu Aisyiyah*\nJam Ke 8 : Ipas IPS *Bu Aisyiyah*')
+            }
+            break
+            case 'selasa': {
+                reply('Jam Ke 1 : B.Jawa *Pak Syaeful*\nJam Ke 2 : Pkn *Pak Wahyu*\nJam Ke 3 : Seni Rupa *Pak Wahyu*\nJam Ke 4 : Seni Ripa *Pak Wahyu*\nJam Ke 5 : B.Ing *Bu Ami*\nJam Ke 6 : B.Ing *Bu Ami*\nJam Ke 7 : Agama *Pak Ali*\nJam Ke 8 : Agama *Pak Ali*')
+            }
+            break
+            case 'rabu': {
+                reply('Jam Ke 1 : MTK *Bu Dina*\nJam Ke 2 : MTK *Bu Dina*\nJam Ke 3 : B.indo *Pak Irul*\nJam Ke 4 : B.indo *Pak Irul*\nJam Ke 5 : iPas Kimia *Bu Isma*\nJam Ke 6 : iPas Kimia *Bu Isma*\nJam Ke 7 : Tjkt *Pak Abdilla*\nJam Ke 8 : Tjkt *Pak Abdilla*')
+            }
+            break
+            case 'kamis': {
+                reply('Jam Ke 1 : B.indo *Pak Irul*\nJam Ke 2 : B.indo *Pak Irul*\nJam Ke 3 : Ipas Fisika *Bu Dina*\nJam Ke 4 : Ipas Fisika *Bu Dina*\nJam Ke 5 : Informatika *Bu Ana*\nJam Ke 6 : informatika *Bu Ana*\nJam Ke 7 : B.jawa *Pak Pak Syaiful*\nJam Ke 8 : Pkn *Pak Wahyu*')
+            }
+            break
+            case 'jumat': {
+                reply('Jam Ke 1 : TJKT *Pak Abdilla*\nJam Ke 2 : TJKT *Pak Abdilla*\nJam Ke 3 : TJKT *Pak Abdilla*\nJam Ke 4 : TJKT *Pak Abdilla*\nJam Ke 5 : Informatika *Pak Ali*')
+            }
+            break
+            case 'sabtu': {
+                reply('Jam Ke 1 : B.ing *Bu Amy*\nJam Ke 2 : B.ing *Bu Amy*\nJam Ke 3 : Tjkt *Pak Abdilla*\nJam Ke 4 : Tjkt *Pak Abdilla*\nJam Ke 5 : Sejarah *Bu Evi*\nJam Ke 6 : Sejarah *Bu Evi*\nJam Ke 7 : Mtk *Bu Dina*\nJam Ke 8 : Mtk *Bu Dina*')
+            }
+            break
+case 'fotomapel': {
+                amin.sendMessage(m.chat, { image: { url: 'https://telegra.ph/file/9db98adcb977c640887d4.jpg' }, caption: `*Hai Kak ${m.pushName}*\n\n Ini Adalah Pelajaran Kelas 10A TJKT SMK ASSYIDIYAH KUDUS` }, { quoted: m })
+            }
+            break
 	       case 'attp': case 'ttp': {
            if (!text) throw `Example : ${prefix + command} text`
            await amin.sendMedia(m.chat, `https://xteam.xyz/${command}?file&text=${text}`, 'zens', 'morou', m, {asSticker: true})
@@ -2505,7 +2614,7 @@ case 'anime': case 'waifu': case 'husbu': case 'neko': case 'shinobu': case 'meg
             case 'tiktok': case 'tiktoknowm': {
                 if (!text) throw 'Masukkan Query Link!'
                 m.reply(mess.wait)
-                let anu = await fetchJson(`https://anabotofc.herokuapp.com/api/download/tiktok2?url=${text}&apikey=AnaBot`)
+                let anu = await fetchJson(`https://hadi-api.cf/api/tiktok?url=${text}`)
                 let buttons = [
                     {buttonId: `allmenu`, buttonText: {displayText: '⌕ List Menu'}, type: 1},
                     {buttonId: `tiktokmp3 ${text}`, buttonText: {displayText: '♫ Audio'}, type: 1}
@@ -2946,7 +3055,7 @@ amin.sendMessage(m.chat, {audio: goblok, mimetype:'audio/mpeg', ptt:true }, {quo
 ╰──❏`
             let ments = [ownernya, me, ini_mark]
             let buttons = [{ buttonId: 'list', buttonText: { displayText: '⌕ List Menu' }, type: 1 },{ buttonId: 'rules', buttonText: { displayText: '⌕ Rules' }, type: 1 },{ buttonId: 'donasi', buttonText: { displayText: '⌕ Donasi' }, type: 1 }]
-            await amin.sendButtonText(m.chat, buttons, jawab, nyoutube, m, {mentions: ments, quoted: fgclink})
+            await amin.sendButtonText(m.chat, buttons, jawab, nyoutube, m, {mentions: ments, quoted: fkontak})
             } 
 break
             case 'simplemenu': case 'list': case 'help': {
@@ -2994,6 +3103,7 @@ break
                 {title: "Anonymous", rowId: `manonymous`, description: `🎭Anonymous Menu`},
                 {title: "Islamic", rowId: `mislamic`, description: `🕌Islamic Menu`},
                 {title: "Voice", rowId: `mvoice`, description: `🎶Voice Menu`},
+                {title: "Mapel", rowId: `mapel`, description: `🤔Mata Pelajaran`},
                 {title: "Owner", rowId: `mowner`, description: `🎟Owner Menu`}
                 ]
                 },
