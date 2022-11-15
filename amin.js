@@ -28,6 +28,15 @@ const nyoutube = ('instagram.com/saya_asroriamin')  //ubah di config biar ngk em
 const ini_mark = `0@s.whatsapp.net`
 const ownernya = ownernomer + '@s.whatsapp.net'
 
+//Fake Reply
+	const replay = (teks) => {
+amin.sendMessage(m.chat, { text: teks, contextInfo:{"externalAdReply": {"title": `Kirisaki Chitoge`,"body": `By Asrori Amin`, "previewType": "PHOTO","thumbnailUrl": ``,"thumbnail": fs.readFileSync(`./image/zens.jpg`),"sourceUrl": "https://asroriamin.xyz/"}}}, { quoted: m})
+}
+
+	const reply = (teks) => {
+  amin.sendMessage(m.chat, { text: teks, contextInfo:{"externalAdReply": {"title": `Chitoge Kirisaki`,"body": `Halo Kak ${pushname}`, "previewType": "PHOTO","thumbnailUrl": ``,"thumbnail": thumb,"sourceUrl": `https://chat.whatsapp.com/DxNGTCpVlyDH6HVWE1BmX3`}}}, { quoted: m })
+  }
+
 //TIME
 const time2 = moment().tz('Asia/Jakarta').format('HH:mm:ss')  
  if(time2 < "23:59:00"){
@@ -2612,23 +2621,14 @@ case 'anime': case 'waifu': case 'husbu': case 'neko': case 'shinobu': case 'meg
             }
             break
             case 'tiktok': case 'tiktoknowm': {
-                if (!text) throw 'Masukkan Query Link!'
-                m.reply(mess.wait)
-                let anu = await fetchJson(`https://hadi-api.cf/api/tiktok?url=${text}`)
-                let buttons = [
-                    {buttonId: `allmenu`, buttonText: {displayText: '⌕ List Menu'}, type: 1},
-                    {buttonId: `tiktokmp3 ${text}`, buttonText: {displayText: '♫ Audio'}, type: 1}
-                ]
-                let buttonMessage = {
-                    video: { url: anu.result.nowm },
-                    caption: `Download From ${text}`,
-                    footer: nyoutube,
-                    buttons: buttons,
-                    headerType: 5
-                }
-                amin.sendMessage(m.chat, buttonMessage, { quoted: m })
-            }
-            break
+                if (!text) return m.reply( `Example : ${prefix + command} link`)
+if (!q.includes('tiktok')) return reply(`Link Invalid!!`)
+m.reply("Loading...")
+require('./lib/tiktok').Tiktok(q).then( data => {
+amin.sendMessage(m.chat, { video: { url: data.nowm }}, { quoted: m })
+})
+}
+break
            /**case 'tiktokwm': case 'tiktokwatermark': {
                 if (!text) throw 'Masukkan Query Link!'
                 m.reply(mess.wait)
@@ -2648,35 +2648,20 @@ case 'anime': case 'waifu': case 'husbu': case 'neko': case 'shinobu': case 'meg
             }
             break**/
             case 'tiktokmp3': case 'tiktokaudio': {
-                if (!text) throw 'Masukkan Query Link!'
-                m.reply(mess.wait)
-                let anu = await fetchJson(`https://anabotofc.herokuapp.com/api/download/tiktok2?url=${text}&apikey=AnaBot`)
-                let buttons = [
-                    {buttonId: `allmenu`, buttonText: {displayText: '⌕ List Menu'}, type: 1},
-                    {buttonId: `tiktoknowm ${text}`, buttonText: {displayText: '► No Watermark'}, type: 1}
-                ]
-                let buttonMessage = {
-                    text: `Download From ${text}`,
-                    footer: nyoutube,
-                    buttons: buttons,
-                    headerType: 2
-                }
-                let msg = await amin.sendMessage(m.chat, buttonMessage, { quoted: m })
-                amin.sendMessage(m.chat, { audio: { url: anu.result.nowm }, mimetype: 'audio/mpeg'}, { quoted: msg })
-            }
-            break
+                if (!text) return m.reply( `Example : ${prefix + command} link`)
+if (!q.includes('tiktok')) return reply(`Link Invalid!!`)
+m.reply("Loading...")
+require('./lib/tiktok').Tiktok(q).then( data => {
+amin.sendMessage(m.chat, { audio: { url: data.audio }, mimetype: 'audio/mp4' }, { quoted: m })
+})
+}
+break
 	        case 'instagram': case 'ig': case 'igdl': {
-                if (!text) throw 'No Query Url!'
-                m.reply(mess.wait)
-                if (/(?:\/p\/|\/reel\/|\/tv\/)([^\s&]+)/.test(isUrl(text)[0])) {
-                    let anu = await fetchJson(api('zenz', '/downloader/instagram2', { url: isUrl(text)[0] }, 'apikey'))
-                    for (let media of anu.data) amin.sendFileUrl(m.chat, media, `Download Url Instagram From ${isUrl(text)[0]}`, m)
-                } else if (/\/stories\/([^\s&]+)/.test(isUrl(text)[0])) {
-                    let anu = await fetchJson(api('zenz', '/downloader/instastory', { url: isUrl(text)[0] }, 'apikey'))
-                    amin.sendFileUrl(m.chat, anu.media[0].url, `Download Url Instagram From ${isUrl(text)[0]}`, m)
-                }
-            }
-            break
+                const instagramGetUrl = require("instagram-url-direct")
+const results = (await instagramGetUrl(q)).url_list[0]
+console.log(results)
+}
+break
             case 'joox': case 'jooxdl': {
                 if (!text) throw 'No Query Title'
                 m.reply(mess.wait)
@@ -2729,12 +2714,16 @@ case 'anime': case 'waifu': case 'husbu': case 'neko': case 'shinobu': case 'meg
             }
             break
 	        case 'fbdl': case 'fb': case 'facebook': {
-                if (!text) throw 'Masukkan Query Link!'
-                m.reply(mess.wait)
-                let anu = await fetchJson(api('zenz', '/api/downloader/facebook', { url: text }, 'apikey'))
-                amin.sendMessage(m.chat, { video: { url: anu.result.url }, caption: `⌗ Title : ${anu.result.title}`}, { quoted: m })
-            }
-            break
+                if (!text) return m.reply( `Example : ${prefix + command} link`)
+if (!q.includes('facebook.com')) return m.reply(`Link Invalid!!`)
+m.reply("Loading...")
+const { fbdl } = require("./lib/facebook");
+fbdl(q).then( data => {
+if (data.length == 0) return reply(`Maaf terjadi kesalahan, ganti link yang lain!`)
+amin.sendMessage(m.chat, { video: { url: data[data.length - 1] }, caption: data.title }, { quoted: m })
+})
+}
+break
 	        case 'pindl': case 'pinterestdl': {
                 if (!text) throw 'Masukkan Query Link!'
                 m.reply(mess.wait)
