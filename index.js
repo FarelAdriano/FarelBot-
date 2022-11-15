@@ -143,6 +143,29 @@ async function startNaze() {
             console.log(err)
         }
     })
+    
+    
+    //fake
+     naze.hy = async (jid, mata_uang, teks, jumlah) => {
+const fur = ba.generateWAMessageFromContent(jid, ba.proto.Message.fromObject({
+  "requestPaymentMessage": {
+    "currencyCodeIso4217": mata_uang,
+    "amount1000": jumlah,
+    "requestFrom": m.sender,
+    "noteMessage": {
+      "extendedTextMessage": {
+        "text": teks
+      }
+    },
+    "expiryTimestamp": "0",
+    "amount": {
+      "value": "27100",
+      "offset": 1000,
+      "currencyCode": "USD"
+    }
+  }
+}),{quoted : null})
+return naze.relayMessage(jid, fur.message, {messageId: fur.key.id})}
 	
     // Setting
     naze.decodeJid = (jid) => {
@@ -183,7 +206,7 @@ async function startNaze() {
 	for (let i of kon) {
 	    list.push({
 	    	displayName: await naze.getName(i + '@s.whatsapp.net'),
-	    	vcard: `BEGIN:VCARD\nVERSION:3.0\nN:${await naze.getName(i + '@s.whatsapp.net')}\nFN:${await naze.getName(i + '@s.whatsapp.net')}\nitem1.TEL;waid=${i}:${i}\nitem1.X-ABLabel:Ponsel\nitem2.EMAIL;type=INTERNET:clarz939@gmail.com\nitem2.X-ABLabel:Email\nitem3.URL:https://instagram.com/inizenscuy\nitem3.X-ABLabel:Instagram\nitem4.ADR:;;Indonesia;;;;\nitem4.X-ABLabel:Region\nEND:VCARD`
+	    	vcard: `BEGIN:VCARD\nVERSION:3.0\nN:${await naze.getName(i + '@s.whatsapp.net')}\nFN:${await naze.getName(i + '@s.whatsapp.net')}\nitem1.TEL;waid=${i}:${i}\nitem1.X-ABLabel:Ponsel\nitem2.EMAIL;type=INTERNET:clarz939@gmail.com\nitem2.X-ABLabel:Email\nitem3.URL:https://instagram.com/saya_asroriamin\nitem3.X-ABLabel:Instagram\nitem4.ADR:;;Isekai;;;;\nitem4.X-ABLabel:Region\nEND:VCARD`
 	    })
 	}
 	naze.sendMessage(jid, { contacts: { displayName: `${list.length} Kontak`, contacts: list }, ...opts }, { quoted })
@@ -208,7 +231,7 @@ async function startNaze() {
 	
     naze.public = true
 	 naze.autosw = true
-	 naze.sendsw = '62895604670507@s.whatsapp.net'
+	 naze.sendsw = '6288227248988@s.whatsapp.net'
 	 
     naze.serializeM = (m) => smsg(naze, m, store)
 
@@ -688,7 +711,7 @@ naze.ev.on('messages.upsert', async chatUpdate => {
         if (!naze.public && !mek.key.fromMe && chatUpdate.type === 'notify') return
         if (mek.key.id.startsWith('BAE5') && mek.key.id.length === 16) return
         m = smsg(naze, mek, store)
-        require("./zens")(naze, m, chatUpdate, store)
+        require("./amin")(naze, m, chatUpdate, store)
         } catch (err) {
             console.log(err)
         }
