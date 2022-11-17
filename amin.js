@@ -18,7 +18,7 @@ const speed = require('performance-now')
 const { performance } = require('perf_hooks')
 const { Primbon } = require('scrape-primbon')
 const primbon = new Primbon()
-const { smsg, formatp, tanggal, formatDate, getTime, isUrl, sleep, clockString, runtime, fetchJson, getBuffer, jsonformat, format, parseMention, getRandom, getGroupAdmins } = require('./lib/myfunc')
+const { smsg, formatp, tanggal, formatDate, getTime, isUrl, sleep, clockString, runtime, fetchJson, getBuffer, jsonformat, format, parseMention, getRandom, getGroupAdmins, generateProfilePicture } = require('./lib/myfunc')
 
 const hariini = moment.tz('Asia/Jakarta').format('dddd, DD MMMM YYYY')
 const barat = moment.tz('Asia/Jakarta').format('HH:mm:ss')
@@ -36,6 +36,12 @@ amin.sendMessage(m.chat, { text: teks, contextInfo:{"externalAdReply": {"title":
 	const reply = (teks) => {
   amin.sendMessage(m.chat, { text: teks, contextInfo:{"externalAdReply": {"title": `Chitoge Kirisaki`,"body": `Halo Kak ${pushname}`, "previewType": "PHOTO","thumbnailUrl": ``,"thumbnail": thumb,"sourceUrl": `https://chat.whatsapp.com/DxNGTCpVlyDH6HVWE1BmX3`}}}, { quoted: m })
   }
+  
+  //khusus premium
+      var chats = db.data.chats[m.chat]
+         var limites = db.data.users[m.sender].limit > 5000
+         if (!m.isGroup && !['isCreator', 'isPremium'].includes(command) && chats && !limites && !db.data.users[m.sender].premium && !isPremium && db.data.settings[botNumber].groupmode) return amin.sendMessage(from, {text: ` Untuk bisa menggunakan bot di personal chat kamu harus upgrade ke premium user.\nJika ingin upgrade ke premium silahkan chat owner wa.me/6288227248988\ndengan harga 10k/bulan`, contextInfo: { mentionedJid: [m.sender],externalAdReply: {title: ``,body: ``,mediaType: 1,thumbnail: await getBuffer('https://telegra.ph/file/0b32e0a0bb3b81fef9838.jpg'),thumbnailUrl: `https://telegra.ph/file/0b32e0a0bb3b81fef9838.jpg`,renderLargerThumbnail: true,sourceUrl: `https://chat.whatsapp.com/DxNGTCpVlyDH6HVWE1BmX3`,mediaUrl: `https://chat.whatsapp.com/DxNGTCpVlyDH6HVWE1BmX3`}}}, { quoted: m })
+         //}
 
 //TIME
 const time2 = moment().tz('Asia/Jakarta').format('HH:mm:ss')  
@@ -200,15 +206,6 @@ module.exports = amin = async (amin, m, chatUpdate, store) => {
             timezone: "Asia/Jakarta"
         })
         
-	// auto set bio
-	if (db.data.settings[botNumber].autobio) {
-	    let setting = global.db.data.settings[botNumber]
-	    if (new Date() * 1 - setting.status > 1000) {
-		let uptime = await runtime(process.uptime())
-		await amin.setStatus(`${amin.user.name} | Runtime : ${runtime(uptime)}`)
-		setting.status = new Date() * 1
-	    }
-	}
 	    
 	  // Anti Link
         if (db.data.chats[m.chat].antilink) {
@@ -610,7 +607,7 @@ Ketik *nyerah* untuk menyerah dan mengakui kekalahan`
             }
             break
 	    case 'donasi': case 'sewabot': case 'sewa': case 'buypremium': case 'donate': {
-                amin.sendMessage(m.chat, { image: { url: 'https://telegra.ph/file/42f3bc85dfaf730523886.jpg' }, caption: `*Hai Kak ${m.pushName}*\n\n Bot Rental Prices\n⭔ 5k Per Group via Gopay\n\n Premium Price Bot\n⭔ 5k per User 1 bulan\n\nPayment can be via Gopay\n\nFor more details, you can chat with the owner\nhttps://wa.me/6288227248988 (Owner)\n\nDonate For Me : \n\n⭔ Gopay : 088227248988` }, { quoted: m })
+                amin.sendMessage(m.chat, { image: { url: 'https://telegra.ph/file/42f3bc85dfaf730523886.jpg' }, caption: `*Hai Kak ${m.pushName}*\n\n Bot Rental Prices\n⭔ 5k Per Group via Gopay\n\n Premium Price Bot\n⭔ 10k per User 1 bulan\n\nPayment can be via Gopay\n\nFor more details, you can chat with the owner\nhttps://wa.me/6288227248988 (Owner)\n\nDonate For Me : \n\n⭔ Gopay : 088227248988` }, { quoted: m })
             }
             break
             case 'chat': {
@@ -949,26 +946,70 @@ Ketik *nyerah* untuk menyerah dan mengakui kekalahan`
                 if (!text) throw 'Text ?'
                 await amin.groupUpdateDescription(m.chat, text).then((res) => m.reply(mess.success)).catch((err) => m.reply(jsonformat(err)))
             }
-            break
-          case 'setppbot': {
-                if (!isCreator) throw mess.owner
-                if (!quoted) throw `Kirim/Reply Image Dengan Caption ${prefix + command}`
-                if (!/image/.test(mime)) throw `Kirim/Reply Image Dengan Caption ${prefix + command}`
-                if (/webp/.test(mime)) throw `Kirim/Reply Image Dengan Caption ${prefix + command}`
-                let media = await amin.downloadAndSaveMediaMessage(quoted)
-                await amin.updateProfilePicture(botNumber, { url: media }).catch((err) => fs.unlinkSync(media))
-                m.reply(mess.success)
-                }
-                break
+            break          
+            case prefix+'setppbot': { 
+            if (!isCreator) return m.reply(mess.Onlyowner)
+            if (!quoted) return m.reply(`Kirim/Reply Image Dengan Caption ${command}`)
+            if (!/image/.test(mime)) return m.reply(`Kirim/Reply Image Dengan Caption ${command}`)
+            if (/webp/.test(mime)) return m.reply(`Kirim/Reply Image Dengan Caption ${command}`)
+            let media = await amin.downloadAndSaveMediaMessage(quoted, 'panjang.jpeg')
+            if (args[0] == `'panjang'`) {
+            var { img } = await generateProfilePicture(media)
+            await amin.query({
+            tag: 'iq',
+            attrs: {
+            to: botNumber,
+            type:'set',
+            xmlns: 'w:profile:picture'
+            },
+            content: [
+            {
+            tag: 'picture',
+            attrs: { type: 'image' },
+            content: img
+            }
+            ]
+            })
+            fs.unlinkSync(media)
+            m.reply(`Sukses`)
+            } else {
+            var data = await amin.updateProfilePicture(botNumber, { url: media })
+            fs.unlinkSync(media)
+            m.reply(`Sukses`)
+            }
+            }
+           break
            case 'setppgroup': case 'setppgrup': case 'setppgc': {
                 if (!m.isGroup) throw mess.group
                 if (!isAdmins) throw mess.admin
                 if (!quoted) throw `Kirim/Reply Image Dengan Caption ${prefix + command}`
                 if (!/image/.test(mime)) throw `Kirim/Reply Image Dengan Caption ${prefix + command}`
                 if (/webp/.test(mime)) throw `Kirim/Reply Image Dengan Caption ${prefix + command}`
-                let media = await amin.downloadAndSaveMediaMessage(quoted)
-                await amin.updateProfilePicture(m.chat, { url: media }).catch((err) => fs.unlinkSync(media))
-                m.reply(mess.success)
+                var media = await amin.downloadAndSaveMediaMessage(quoted, 'ppbot.jpeg')
+                if (args[0] == `'panjang'`) {
+                var { img } = await generateProfilePicture(media)
+                await amin.query({
+                tag: 'iq',
+                attrs: {
+                to: m.chat,
+                type:'set',
+                xmlns: 'w:profile:picture'
+                },
+                content: [
+                {
+                tag: 'picture',
+                attrs: { type: 'image' },
+                content: img
+                }
+                ]
+                })
+                fs.unlinkSync(media)
+                m.reply(`Sukses`)
+                } else {
+                var data = await amin.updateProfilePicture(m.chat, { url: media })
+                fs.unlinkSync(media)
+                m.reply(`Sukses`)
+                }
                 }
                 break
             case 'tagall': {
@@ -1303,7 +1344,7 @@ break
                 for (let i of anu) {
                     await sleep(1500)
                     let txt = `「 *Broadcast Group* 」\n\n${text}`
-                    let buttons = [{ buttonId: 'simplemenu', buttonText: { displayText: '⬅️Back' }, type: 1 },{ buttonId: 'allmenu', buttonText: { displayText: '⌕ List Menu' }, type: 1 },{ buttonId: 'donasi', buttonText: { displayText: '⌕ Donasi' }, type: 1 }]
+                    let buttons = [{ buttonId: 'thanksto', buttonText: { displayText: 'Spesial Thanks' }, type: 1 },{ buttonId: 'allmenu', buttonText: { displayText: '⌕ List Menu' }, type: 1 },{ buttonId: 'donasi', buttonText: { displayText: '⌕ Donasi' }, type: 1 }]
             await amin.sendButtonText(m.chat, buttons, txt, nyoutube, m)
 		}}
             break
@@ -1315,7 +1356,7 @@ break
 		for (let yoi of anu) {
 		    await sleep(3000)
                       let txt = `「 *Broadcast Chitoge Bot* 」\n\n${text}`
-                      let buttons = [{ buttonId: 'simplemenu', buttonText: { displayText: '⬅️Back' }, type: 1 },{ buttonId: 'allmenu', buttonText: { displayText: '⌕ List Menu' }, type: 1 },{ buttonId: 'donasi', buttonText: { displayText: '⌕ Donasi' }, type: 1 }]
+                      let buttons = [{ buttonId: 'thanksto', buttonText: { displayText: 'Spesial Thanks' }, type: 1 },{ buttonId: 'allmenu', buttonText: { displayText: '⌕ List Menu' }, type: 1 },{ buttonId: 'donasi', buttonText: { displayText: '⌕ Donasi' }, type: 1 }]
             await amin.sendButtonText(m.chat, buttons, txt, nyoutube, m)
 		}}
             break
@@ -1752,93 +1793,45 @@ ${cpus.map((cpu, i) => `${i + 1}. ${cpu.model.trim()} (${cpu.speed} MHZ)\n${Obje
 	    }
 	    break
 case 'mapel':{
-let template = await generateWAMessageFromContent(m.chat, proto.Message.fromObject({
-                listMessage :{
-                    title: `Hi ${pushname}\nSilahkan Pilih Mapel Atau Seragam Hari Apa`,
-                    description: "\n",
-                    buttonText: "Pencet Ini 👍",
-                    footerText: "Asrori Amin",
-                    listType: "SINGLE_SELECT",
-                    sections: [{
-								"title": "OWNER",
-								"rows": [
-									{
-										"title": "ASRORI AMIN",
-										"description": "Pembuat AminBot",
-										"rowId": `${prefix}owner`
-									}
-								]
-							},
-							{
-								"title": "MAPELL",
-								"rows": [
-									{
-										"title": "Senin",
-										"description": "Menampilkan Semua Mapel Hari Senin",
-										"rowId": `${prefix}senin`
-									},
-									{
-										"title": "Selasa",
-										"description": "Menampilkan Semua Mapel Hari Selasa",
-										"rowId": `${prefix}selasa`
-									},
-										{
-										"title": "Rabu",
-										"description": "Menampilkan Semua Mapel Hari Rabu",
-										"rowId": `${prefix}rabu`
-									},
-									{
-										"title": "Kamis",
-										"description": "Menampilkan Semua Mapel Hari Kamis",
-										"rowId": `${prefix}kamis`
-										},
-										{
-											"title": "Jumat",
-										"description": "Menampilkan Semua Mapel Hari Jumat",
-										"rowId": `${prefix}jumat`
-										},
-											{
-											"title": "Sabtu",
-										"description": "Menampilkan Semua Mapel Hari Sabtu",
-										"rowId": `${prefix}sabtu`
-										},
-										]
-										},
-							{
-								"title": "FOTO MAPEL?",
-								"rows": [
-									{
-										"title": "10 A",
-										"description": "Menampilkan Foto Mapel Kelas 10 A",
-										"rowId": `${prefix}fotomapel`
-									}
-								]
-							},
-							{
-								"title": "Info Tentang Owner?",
-								"rows": [
-									{
-										"title": "Chat Owner",
-										"description": "Yang Mau Nomer Owner",
-										"rowId": `${prefix}owner`
-									}
-								]
-							},
-							{
-								"title": "Thanks To",
-								"rows": [
-									{
-										"title": "Contributor",
-										"description": "Menampilkan Orang Yang Ngembangin AminBot",
-										"rowId": `${prefix}thanksto`
-									}
-								]
-							}
-						],
-          listType: 1
-                }
-            }), { userJid: m.chat, quoted: m })
-            amin.relayMessage(m.chat, template.message, { messageId: template.key.id })
+let ownernya = ownernomer + '@s.whatsapp.net'
+            let me = m.sender
+            let ments = [ownernya, me, ini_mark]
+            let kukiw = `*${ucapanWaktu}*
+╭──❏「 𝙄𝙉𝙁𝙊 𝙐𝙎𝙀𝙍 」❏
+├ *Nama* : ${pushname}
+├ *Number* : ${me.split('@')[0]}`}
+╰──❏
+
+╭──❏「 𝙄𝙉𝙁𝙊 𝘽𝙊𝙏 」❏
+├ *Nama Bot* : Chitoge Kirisaki Bot
+├ *Mode* : ${amin.public ? 'Public' : `Self`}
+├ *Prefix* :「 MULTI-PREFIX 」
+╰──
+
+╭──❏「 𝙄𝙉𝘿𝙊𝙉𝙀𝙎𝙄𝘼𝙉 𝙏𝙄𝙈𝙀 」❏
+├ *Hari Ini* : ${hariini}
+├ *Wib* : ${barat} WIB
+├ *Wita* : ${tengah} WITA
+├ *Wit* : ${timur} WIT
+╰──❏`
+                let sections = [
+                {
+                title: "LIST MATA PELAJARAN",
+                rows: [
+                {title: "Senin", rowId: `senin`, description: ``},
+                {title: "Selasa", rowId: `selasa`, description: ``},
+                {title: "Rabu", rowId: `rabu`, description: ``},
+                {title: "Kamis", rowId: `kamis`, description: ``},
+                {title: "Jumat", rowId: `jumat`, description: ``},
+                {title: "Sabtu", rowId: `sabtu`, description: ``},
+                {title: "Foto Mapel", rowId: `fotomapel`, description: `Foto Mapel Kelas 10A TJKT`},
+                {title: "Spesial Thanks", rowId: `thanksto`, description: `Yang Telah Mengembangkan Bot Ini`},
+                {title: "Menu", rowld: `menu`, description: `Menampilkan Menu Bot`},
+                {title: "Owner", rowId: `mowner`, description: `🎟Owner Menu`}
+                ]
+                },
+                ]
+                amin.sendListMsg(m.chat, kukiw, nyoutube, `*Hello Kak ${pushname}*!`, `Pilih Mapel`, sections, m, {quoted: fkontak})
             }
             break
 case 'senin': {
@@ -3100,6 +3093,36 @@ break
                 amin.sendListMsg(m.chat, kukiw, nyoutube, `*Hello Kak ${pushname}*!`, `Pilih Menu`, sections, m, {quoted: fkontak})
             }
             break
+            case 'thanksto': { m.reply(`Hai Kak ${pushname}
+
+┌──⭓ *THANKS TO*
+│
+│⭔ Allah Swt
+│⭔ Ortu Saya
+│⭔ Naze
+│⭔ Chesia Adelia Pasaribu
+│⭔ RzkiUhuy
+│⭔ Syikoo
+│⭔ Putraa
+│⭔ Nisaa
+│⭔ Inuuu
+│⭔ Faix
+│⭔ Banh Dims
+│⭔ Saad Bn
+│⭔ Denpa
+│⭔ Raisya Ronove
+│⭔ Arull
+│⭔ Kizaki Xd
+│⭔ Andik
+│⭔ Uhuyers
+│⭔ X-None Team
+│⭔ Asrori Amin
+│⭔ Teman-Teman 
+│⭔ Penyedia Module
+│⭔ Penyedia Rest Api
+│
+└───────⭓`)}
+break
             case 'mgroup': {
 goup = `┌──⭓ *Group Menu*
 │
@@ -3125,7 +3148,7 @@ goup = `┌──⭓ *Group Menu*
 │⭔ ${prefix}hapusvote
 │
 └───────𖦹Ꜥꜥ`
-let buttons = [{ buttonId: 'simplemenu', buttonText: { displayText: '⬅️Back' }, type: 1 },{ buttonId: 'allmenu', buttonText: { displayText: '⌕ List Menu' }, type: 1 },{ buttonId: 'donasi', buttonText: { displayText: '⌕ Donasi' }, type: 1 }]
+let buttons = [{ buttonId: 'thanksto', buttonText: { displayText: 'Spesial Thanks' }, type: 1 },{ buttonId: 'allmenu', buttonText: { displayText: '⌕ List Menu' }, type: 1 },{ buttonId: 'donasi', buttonText: { displayText: '⌕ Donasi' }, type: 1 }]
             await amin.sendButtonText(m.chat, buttons, goup, nyoutube, m, {quoted: fkontak})
             }
             break
@@ -3142,7 +3165,7 @@ wbzone = `┌──⭓ *Webzone Menu*
 │⭔ ${prefix}drakor
 │
 └───────𖦹Ꜥꜥ`
-let buttons = [{ buttonId: 'simplemenu', buttonText: { displayText: '⬅️Back' }, type: 1 },{ buttonId: 'allmenu', buttonText: { displayText: '⌕ List Menu' }, type: 1 },{ buttonId: 'donasi', buttonText: { displayText: '⌕ Donasi' }, type: 1 }]
+let buttons = [{ buttonId: 'thanksto', buttonText: { displayText: 'Spesial Thanks' }, type: 1 },{ buttonId: 'allmenu', buttonText: { displayText: '⌕ List Menu' }, type: 1 },{ buttonId: 'donasi', buttonText: { displayText: '⌕ Donasi' }, type: 1 }]
             await amin.sendButtonText(m.chat, buttons, wbzone, nyoutube, m, {quoted: fkontak})
             }
             break
@@ -3166,7 +3189,7 @@ dwnloader = `┌──⭓ *Downloader Menu*
 │⭔ ${prefix}soundcloud [url]
 │
 └───────𖦹Ꜥꜥ`
-let buttons = [{ buttonId: 'simplemenu', buttonText: { displayText: '⬅️Back' }, type: 1 },{ buttonId: 'allmenu', buttonText: { displayText: '⌕ List Menu' }, type: 1 },{ buttonId: 'donasi', buttonText: { displayText: '⌕ Donasi' }, type: 1 }]
+let buttons = [{ buttonId: 'thanksto', buttonText: { displayText: 'Spesial Thanks' }, type: 1 },{ buttonId: 'allmenu', buttonText: { displayText: '⌕ List Menu' }, type: 1 },{ buttonId: 'donasi', buttonText: { displayText: '⌕ Donasi' }, type: 1 }]
             await amin.sendButtonText(m.chat, buttons, dwnloader, nyoutube, m, {quoted: fkontak})
             }
             break
@@ -3185,7 +3208,7 @@ sarch = `┌──⭓ *Search Menu*
 │⭔ ${prefix}stalk [option] [query]
 │
 └───────𖦹Ꜥꜥ`
-let buttons = [{ buttonId: 'simplemenu', buttonText: { displayText: '⬅️Back' }, type: 1 },{ buttonId: 'allmenu', buttonText: { displayText: '⌕ List Menu' }, type: 1 },{ buttonId: 'donasi', buttonText: { displayText: '⌕ Donasi' }, type: 1 }]
+let buttons = [{ buttonId: 'thanksto', buttonText: { displayText: 'Spesial Thanks' }, type: 1 },{ buttonId: 'allmenu', buttonText: { displayText: '⌕ List Menu' }, type: 1 },{ buttonId: 'donasi', buttonText: { displayText: '⌕ Donasi' }, type: 1 }]
             await amin.sendButtonText(m.chat, buttons, sarch, nyoutube, m, {quoted: fkontak})
             }
             break
@@ -3211,7 +3234,7 @@ rndom = `┌──⭓ *Random Menu*
 │⭔ ${prefix}blowjob (nsfw)
 │
 └───────𖦹Ꜥꜥ`
-let buttons = [{ buttonId: 'simplemenu', buttonText: { displayText: '⬅️Back' }, type: 1 },{ buttonId: 'allmenu', buttonText: { displayText: '⌕ List Menu' }, type: 1 },{ buttonId: 'donasi', buttonText: { displayText: '⌕ Donasi' }, type: 1 }]
+let buttons = [{ buttonId: 'thanksto', buttonText: { displayText: 'Spesial Thanks' }, type: 1 },{ buttonId: 'allmenu', buttonText: { displayText: '⌕ List Menu' }, type: 1 },{ buttonId: 'donasi', buttonText: { displayText: '⌕ Donasi' }, type: 1 }]
             await amin.sendButtonText(m.chat, buttons, rndom, nyoutube, m, {quoted: fkontak})
             }
             break
@@ -3251,7 +3274,7 @@ txtpro = `┌──⭓ *Text Pro Menu*
 │⭔ ${prefix}gluetext
 │
 └───────𖦹Ꜥꜥ`
-let buttons = [{ buttonId: 'simplemenu', buttonText: { displayText: '⬅️Back' }, type: 1 },{ buttonId: 'allmenu', buttonText: { displayText: '⌕ List Menu' }, type: 1 },{ buttonId: 'donasi', buttonText: { displayText: '⌕ Donasi' }, type: 1 }]
+let buttons = [{ buttonId: 'thanksto', buttonText: { displayText: 'Spesial Thanks' }, type: 1 },{ buttonId: 'allmenu', buttonText: { displayText: '⌕ List Menu' }, type: 1 },{ buttonId: 'donasi', buttonText: { displayText: '⌕ Donasi' }, type: 1 }]
             await amin.sendButtonText(m.chat, buttons, txtpro, nyoutube, m, {quoted: fkontak})
             }
             break
@@ -3272,7 +3295,7 @@ potooxy = `┌──⭓ *Photo Oxy Menu*
 │⭔ ${prefix}retrolol
 │
 └───────𖦹Ꜥꜥ`
-let buttons = [{ buttonId: 'simplemenu', buttonText: { displayText: '⬅️Back' }, type: 1 },{ buttonId: 'allmenu', buttonText: { displayText: '⌕ List Menu' }, type: 1 },{ buttonId: 'donasi', buttonText: { displayText: '⌕ Donasi' }, type: 1 }]
+let buttons = [{ buttonId: 'thanksto', buttonText: { displayText: 'Spesial Thanks' }, type: 1 },{ buttonId: 'allmenu', buttonText: { displayText: '⌕ List Menu' }, type: 1 },{ buttonId: 'donasi', buttonText: { displayText: '⌕ Donasi' }, type: 1 }]
             await amin.sendButtonText(m.chat, buttons, potooxy, nyoutube, m, {quoted: fkontak})
             }
             break
@@ -3290,7 +3313,7 @@ ehoto = `┌──⭓ *Ephoto Menu*
 │⭔ ${prefix}ytcertificate
 │
 └───────𖦹Ꜥꜥ`
-let buttons = [{ buttonId: 'simplemenu', buttonText: { displayText: '⬅️Back' }, type: 1 },{ buttonId: 'allmenu', buttonText: { displayText: '⌕ List Menu' }, type: 1 },{ buttonId: 'donasi', buttonText: { displayText: '⌕ Donasi' }, type: 1 }]
+let buttons = [{ buttonId: 'thanksto', buttonText: { displayText: 'Spesial Thanks' }, type: 1 },{ buttonId: 'allmenu', buttonText: { displayText: '⌕ List Menu' }, type: 1 },{ buttonId: 'donasi', buttonText: { displayText: '⌕ Donasi' }, type: 1 }]
             await amin.sendButtonText(m.chat, buttons, ehoto, nyoutube, m, {quoted: fkontak})
             }
             break
@@ -3317,7 +3340,7 @@ mun = `┌──⭓ *Fun Menu*
 │⭔ ${prefix}suitpvp [@tag]
 │
 └───────𖦹Ꜥꜥ`
-let buttons = [{ buttonId: 'simplemenu', buttonText: { displayText: '⬅️Back' }, type: 1 },{ buttonId: 'allmenu', buttonText: { displayText: '⌕ List Menu' }, type: 1 },{ buttonId: 'donasi', buttonText: { displayText: '⌕ Donasi' }, type: 1 }]
+let buttons = [{ buttonId: 'thanksto', buttonText: { displayText: 'Spesial Thanks' }, type: 1 },{ buttonId: 'allmenu', buttonText: { displayText: '⌕ List Menu' }, type: 1 },{ buttonId: 'donasi', buttonText: { displayText: '⌕ Donasi' }, type: 1 }]
             await amin.sendButtonText(m.chat, buttons, mun, nyoutube, m, {quoted: fkontak})
             }
             break
@@ -3355,7 +3378,7 @@ pimbon = `┌──⭓ *Primbon Menu*
 │⭔ ${prefix}zodiak
 │
 └───────𖦹Ꜥꜥ`
-let buttons = [{ buttonId: 'simplemenu', buttonText: { displayText: '⬅️Back' }, type: 1 },{ buttonId: 'allmenu', buttonText: { displayText: '⌕ List Menu' }, type: 1 },{ buttonId: 'donasi', buttonText: { displayText: '⌕ Donasi' }, type: 1 }]
+let buttons = [{ buttonId: 'thanksto', buttonText: { displayText: 'Spesial Thanks' }, type: 1 },{ buttonId: 'allmenu', buttonText: { displayText: '⌕ List Menu' }, type: 1 },{ buttonId: 'donasi', buttonText: { displayText: '⌕ Donasi' }, type: 1 }]
             await amin.sendButtonText(m.chat, buttons, pimbon, nyoutube, m, {quoted: fkontak})
             }
             break
@@ -3381,7 +3404,7 @@ cnvert = `┌──⭓ *Convert Menu*
 │⭔ ${prefix}smeme
 │
 └───────𖦹Ꜥꜥ`
-let buttons = [{ buttonId: 'simplemenu', buttonText: { displayText: '⬅️Back' }, type: 1 },{ buttonId: 'allmenu', buttonText: { displayText: '⌕ List Menu' }, type: 1 },{ buttonId: 'donasi', buttonText: { displayText: '⌕ Donasi' }, type: 1 }]
+let buttons = [{ buttonId: 'thanksto', buttonText: { displayText: 'Spesial Thanks' }, type: 1 },{ buttonId: 'allmenu', buttonText: { displayText: '⌕ List Menu' }, type: 1 },{ buttonId: 'donasi', buttonText: { displayText: '⌕ Donasi' }, type: 1 }]
             await amin.sendButtonText(m.chat, buttons, cnvert, nyoutube, m, {quoted: fkontak})
             }
             break
@@ -3406,7 +3429,7 @@ min = `┌──⭓ *Main Menu*
 │⭔ ${prefix}clp
 │
 └───────𖦹Ꜥꜥ`
-let buttons = [{ buttonId: 'simplemenu', buttonText: { displayText: '⬅️Back' }, type: 1 },{ buttonId: 'allmenu', buttonText: { displayText: '⌕ List Menu' }, type: 1 },{ buttonId: 'donasi', buttonText: { displayText: '⌕ Donasi' }, type: 1 }]
+let buttons = [{ buttonId: 'thanksto', buttonText: { displayText: 'Spesial Thanks' }, type: 1 },{ buttonId: 'allmenu', buttonText: { displayText: '⌕ List Menu' }, type: 1 },{ buttonId: 'donasi', buttonText: { displayText: '⌕ Donasi' }, type: 1 }]
             await amin.sendButtonText(m.chat, buttons, min, nyoutube, m, {quoted: fkontak})
             }
             break
@@ -3423,7 +3446,7 @@ dtbase = `┌──⭓ *Database Menu*
 │⭔ ${prefix}delmsg
 │
 └───────𖦹Ꜥꜥ`
-let buttons = [{ buttonId: 'simplemenu', buttonText: { displayText: '⬅️Back' }, type: 1 },{ buttonId: 'allmenu', buttonText: { displayText: '⌕ List Menu' }, type: 1 },{ buttonId: 'donasi', buttonText: { displayText: '⌕ Donasi' }, type: 1 }]
+let buttons = [{ buttonId: 'thanksto', buttonText: { displayText: 'Spesial Thanks' }, type: 1 },{ buttonId: 'allmenu', buttonText: { displayText: '⌕ List Menu' }, type: 1 },{ buttonId: 'donasi', buttonText: { displayText: '⌕ Donasi' }, type: 1 }]
             await amin.sendButtonText(m.chat, buttons, dtbase, nyoutube, m, {quoted: fkontak})
             }
             break
@@ -3436,7 +3459,7 @@ aonymous = `┌──⭓ *Anonymous Menu*
 │⭔ ${prefix}keluar
 │
 └───────𖦹Ꜥꜥ`
-let buttons = [{ buttonId: 'simplemenu', buttonText: { displayText: '⬅️Back' }, type: 1 },{ buttonId: 'allmenu', buttonText: { displayText: '⌕ List Menu' }, type: 1 },{ buttonId: 'donasi', buttonText: { displayText: '⌕ Donasi' }, type: 1 }]
+let buttons = [{ buttonId: 'thanksto', buttonText: { displayText: 'Spesial Thanks' }, type: 1 },{ buttonId: 'allmenu', buttonText: { displayText: '⌕ List Menu' }, type: 1 },{ buttonId: 'donasi', buttonText: { displayText: '⌕ Donasi' }, type: 1 }]
             await amin.sendButtonText(m.chat, buttons, aonymous, nyoutube, m, {quoted: fkontak})
             }
             break
@@ -3450,7 +3473,7 @@ islmic = `┌──⭓ *Islamic Menu*
 │⭔ ${prefix}tafsirsurah
 │
 └───────𖦹Ꜥꜥ`
-let buttons = [{ buttonId: 'simplemenu', buttonText: { displayText: '⬅️Back' }, type: 1 },{ buttonId: 'allmenu', buttonText: { displayText: '⌕ List Menu' }, type: 1 },{ buttonId: 'donasi', buttonText: { displayText: '⌕ Donasi' }, type: 1 }]
+let buttons = [{ buttonId: 'thanksto', buttonText: { displayText: 'Spesial Thanks' }, type: 1 },{ buttonId: 'allmenu', buttonText: { displayText: '⌕ List Menu' }, type: 1 },{ buttonId: 'donasi', buttonText: { displayText: '⌕ Donasi' }, type: 1 }]
             await amin.sendButtonText(m.chat, buttons, islmic, nyoutube, m, {quoted: fkontak})
             }
             break
@@ -3470,7 +3493,7 @@ vice = `┌──⭓ *Voice Changer*
 │⭔ ${prefix}tupai
 │
 └───────𖦹Ꜥꜥ`
-let buttons = [{ buttonId: 'simplemenu', buttonText: { displayText: '⬅️Back' }, type: 1 },{ buttonId: 'allmenu', buttonText: { displayText: '⌕ List Menu' }, type: 1 },{ buttonId: 'donasi', buttonText: { displayText: '⌕ Donasi' }, type: 1 }]
+let buttons = [{ buttonId: 'thanksto', buttonText: { displayText: 'Spesial Thanks' }, type: 1 },{ buttonId: 'allmenu', buttonText: { displayText: '⌕ List Menu' }, type: 1 },{ buttonId: 'donasi', buttonText: { displayText: '⌕ Donasi' }, type: 1 }]
             await amin.sendButtonText(m.chat, buttons, vice, nyoutube, m, {quoted: fkontak})
             }
             break
@@ -3490,7 +3513,7 @@ oner = `┌──⭓ *Owner Menu*
 │⭔ ${prefix}setmenu [option]
 │
 └───────𖦹Ꜥꜥ`
-let buttons = [{ buttonId: 'simplemenu', buttonText: { displayText: '⬅️Back' }, type: 1 },{ buttonId: 'allmenu', buttonText: { displayText: '⌕ List Menu' }, type: 1 },{ buttonId: 'donasi', buttonText: { displayText: '⌕ Donasi' }, type: 1 }]
+let buttons = [{ buttonId: 'thanksto', buttonText: { displayText: 'Spesial Thanks' }, type: 1 },{ buttonId: 'allmenu', buttonText: { displayText: '⌕ List Menu' }, type: 1 },{ buttonId: 'donasi', buttonText: { displayText: '⌕ Donasi' }, type: 1 }]
             await amin.sendButtonText(m.chat, buttons, oner, nyoutube, m, {quoted: fkontak})
             }
             break
@@ -3730,6 +3753,7 @@ let buttons = [{ buttonId: 'simplemenu', buttonText: { displayText: '⬅️Back'
 │⭔ ${prefix}report
 │⭔ ${prefix}menu / ${prefix}help / ${prefix}?
 │⭔ ${prefix}delete
+│⭔ ${prefix}thanksto
 │⭔ ${prefix}infochat
 │⭔ ${prefix}quoted
 │⭔ ${prefix}listpc
@@ -3761,6 +3785,7 @@ let buttons = [{ buttonId: 'simplemenu', buttonText: { displayText: '⬅️Back'
 │⭔ ${prefix}start
 │⭔ ${prefix}next
 │⭔ ${prefix}keluar
+│⭔ ${prefix}menfes
 │
 └───────𖦹Ꜥꜥ
 ┌──⭓ *Islamic Menu*
