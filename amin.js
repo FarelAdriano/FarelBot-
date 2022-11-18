@@ -1787,48 +1787,6 @@ ${cpus.map((cpu, i) => `${i + 1}. ${cpu.model.trim()} (${cpu.speed} MHZ)\n${Obje
 		}
 	    }
 	    break
-case 'mapel':{
-let ownernya = ownernomer + '@s.whatsapp.net'
-            let me = m.sender
-            let ments = [ownernya, me, ini_mark]
-            let kukiw = `*${ucapanWaktu}*
-╭──❏「 𝙄𝙉𝙁𝙊 𝙐𝙎𝙀𝙍 」❏
-├ *Nama* : ${pushname}
-├ *Number* : ${me.split('@')[0]}`}
-╰──❏
-
-╭──❏「 𝙄𝙉𝙁𝙊 𝘽𝙊𝙏 」❏
-├ *Nama Bot* : Chitoge Kirisaki Bot
-├ *Mode* : ${amin.public ? 'Public' : `Self`}
-├ *Prefix* :「 MULTI-PREFIX 」
-╰──
-
-╭──❏「 𝙄𝙉𝘿𝙊𝙉𝙀𝙎𝙄𝘼𝙉 𝙏𝙄𝙈𝙀 」❏
-├ *Hari Ini* : ${hariini}
-├ *Wib* : ${barat} WIB
-├ *Wita* : ${tengah} WITA
-├ *Wit* : ${timur} WIT
-╰──❏`
-                let sections = [
-                {
-                title: "LIST MATA PELAJARAN",
-                rows: [
-                {title: "Senin", rowId: `senin`, description: ``},
-                {title: "Selasa", rowId: `selasa`, description: ``},
-                {title: "Rabu", rowId: `rabu`, description: ``},
-                {title: "Kamis", rowId: `kamis`, description: ``},
-                {title: "Jumat", rowId: `jumat`, description: ``},
-                {title: "Sabtu", rowId: `sabtu`, description: ``},
-                {title: "Foto Mapel", rowId: `fotomapel`, description: `Foto Mapel Kelas 10A TJKT`},
-                {title: "Spesial Thanks", rowId: `thanksto`, description: `Yang Telah Mengembangkan Bot Ini`},
-                {title: "Menu", rowld: `menu`, description: `Menampilkan Menu Bot`},
-                {title: "Owner", rowId: `mowner`, description: `🎟Owner Menu`}
-                ]
-                },
-                ]
-                amin.sendListMsg(m.chat, kukiw, nyoutube, `*Hello Kak ${pushname}*!`, `Pilih Mapel`, sections, m, {quoted: fkontak})
-            }
-            break
 case 'senin': {
                 reply('Jam Ke 1 : Character Building *Gus Anam*\nJam Ke 2 : Aswaja *Pak Sumandi*\nJam Ke 3 : Penjas *Bu Evi*\nJam Ke 4 : Penjas *Bu Evi*\nJam Ke 5 : Informatika *Bu Ana*\nJam Ke 6 : Informatika *Bu Ana*\nJam Ke 7 : Ipas IPS *Bu Aisyiyah*\nJam Ke 8 : Ipas IPS *Bu Aisyiyah*')
             }
