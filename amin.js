@@ -37,11 +37,6 @@ amin.sendMessage(m.chat, { text: teks, contextInfo:{"externalAdReply": {"title":
   amin.sendMessage(m.chat, { text: teks, contextInfo:{"externalAdReply": {"title": `Chitoge Kirisaki`,"body": `Halo Kak ${pushname}`, "previewType": "PHOTO","thumbnailUrl": ``,"thumbnail": thumb,"sourceUrl": `https://chat.whatsapp.com/DxNGTCpVlyDH6HVWE1BmX3`}}}, { quoted: m })
   }
   
-  //khusus premium
-      var chats = db.data.chats[m.chat]
-         var limites = db.data.users[m.sender].limit > 5000
-         if (!m.isGroup && !['isCreator', 'isPremium'].includes(command) && chats && !limites && !db.data.users[m.sender].premium && !isPremium && db.data.settings[botNumber].groupmode) return amin.sendMessage(from, {text: ` Untuk bisa menggunakan bot di personal chat kamu harus upgrade ke premium user.\nJika ingin upgrade ke premium silahkan chat owner wa.me/6288227248988\ndengan harga 10k/bulan`, contextInfo: { mentionedJid: [m.sender],externalAdReply: {title: ``,body: ``,mediaType: 1,thumbnail: await getBuffer('https://telegra.ph/file/0b32e0a0bb3b81fef9838.jpg'),thumbnailUrl: `https://telegra.ph/file/0b32e0a0bb3b81fef9838.jpg`,renderLargerThumbnail: true,sourceUrl: `https://chat.whatsapp.com/DxNGTCpVlyDH6HVWE1BmX3`,mediaUrl: `https://chat.whatsapp.com/DxNGTCpVlyDH6HVWE1BmX3`}}}, { quoted: m })
-         //}
 
 //TIME
 const time2 = moment().tz('Asia/Jakarta').format('HH:mm:ss')  
