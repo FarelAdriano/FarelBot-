@@ -24,13 +24,13 @@ const hariini = moment.tz('Asia/Jakarta').format('dddd, DD MMMM YYYY')
 const barat = moment.tz('Asia/Jakarta').format('HH:mm:ss')
 const tengah = moment.tz('Asia/Makassar').format('HH:mm:ss')
 const timur = moment.tz('Asia/Jayapura').format('HH:mm:ss')
-const nyoutube = ('instagram.com/saya_asroriamin')  //ubah di config biar ngk emror
+const nyoutube = ('Farell Bot')  //ubah di config biar ngk emror
 const ini_mark = `0@s.whatsapp.net`
 const ownernya = ownernomer + '@s.whatsapp.net'
 
 //Fake Reply
 	const replay = (teks) => {
-amin.sendMessage(m.chat, { text: teks, contextInfo:{"externalAdReply": {"title": `Kirisaki Chitoge`,"body": `By Asrori Amin`, "previewType": "PHOTO","thumbnailUrl": ``,"thumbnail": fs.readFileSync(`./image/zens.jpg`),"sourceUrl": "https://asroriamin.xyz/"}}}, { quoted: m})
+amin.sendMessage(m.chat, { text: teks, contextInfo:{"externalAdReply": {"title": `Farel Adriano`,"body":Farel Adriano`, "previewType": "PHOTO","thumbnailUrl": ``,"thumbnail": fs.readFileSync(`./image/zens.jpg`),"sourceUrl": "asroriamin.xyz/"}}}, { quoted: m})
 }
 
 	const reply = (teks) => {
