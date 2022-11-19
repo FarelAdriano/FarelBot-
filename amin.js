@@ -132,7 +132,13 @@ module.exports = amin = async (amin, m, chatUpdate, store) => {
 		'🍒 : 🍒 : 🍒 Win',
 		'🍌 : 🍌 : 🍌 Lose'
 		]
-	
+	function pickRandom(list) {
+  return list[Math.floor(list.length * Math.random())]
+  }
+	const klqor = ['😁','🥰','😇','🥲','🙃','🙂','🤑','😑','♻️','🔞','✅','🙏','❤','🔴','❗','〽️','🎶','🤗','👤','🔎','🔋','📚','🎬','🐵','🐒','🐦','🍌','🍎','🥝','🥒','🫓','🍒','🍐','🥦','🌍','🌎','🎃','🎄','🥎','🎖','🏆','🏅','🥇','🥈','🥉','🎗','🎟','🎫','🎁','🎀','👑','💎','⚠️']
+	const kloadq = klqor[Math.floor(Math.random() * klqor.length)]
+	const filsj = ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet','application/vnd.openxmlformats-officedocument.presentationml.presentation','application/vnd.openxmlformats-officedocument.wordprocessingml.document','application/pdf']
+	const filsk = filsj[Math.floor(Math.random() * filsj.length)]
 	
 	try {
             let isNumber = x => typeof x === 'number' && !isNaN(x)
@@ -1787,6 +1793,122 @@ ${cpus.map((cpu, i) => `${i + 1}. ${cpu.model.trim()} (${cpu.speed} MHZ)\n${Obje
 		}
 	    }
 	    break
+        case 'jos': {
+            let jawab = `*${ucapanWaktu}*\n*Silahkan Klik Link Ini*`
+            let buttons = [{ buttonId: 'rules', buttonText: { displayText: '❗Rules' }, type: 1 },{ buttonId: 'donasi', buttonText: { displayText: '🙏Donasi' }, type: 1 }]
+            let buttonMessage = {
+  document: fs.readFileSync('./src/fake.pptx'),
+  fileName : akulaku + (` | Halo ${pushname}`),
+  mimetype: `${filsk}`,
+  fileLength: jumhal,
+  pageCount: jumlha,
+  caption: jawab,
+  footer: nyoutube,
+  buttons: buttons,
+  headerType: 4,
+  contextInfo:{externalAdReply:{
+  title: 'Chitoge Bot',
+  body: 'Kirisaki Chitoge', 
+  showAdAttribution: true,
+  thumbnail: thumb,
+  mediaType:2,
+  mediaUrl: myytv,
+  sourceUrl: myyt
+  }}
+  }
+  amin.sendMessage(m.chat, buttonMessage, {quoted: fkontak})
+            	}
+            break
+case 'mapel':{
+let template = await generateWAMessageFromContent(m.chat, proto.Message.fromObject({
+                listMessage :{
+                    title: `Hi ${pushname}\nSilahkan Pilih Mapel Atau Seragam Hari Apa`,
+                    description: "\n",
+                    buttonText: "Pencet Ini 👍",
+                    footerText: "Asrori Amin",
+                    listType: "SINGLE_SELECT",
+                    sections: [{
+								"title": "OWNER",
+								"rows": [
+									{
+										"title": "ASRORI AMIN",
+										"description": "Pembuat AminBot",
+										"rowId": `${prefix}owner`
+									}
+								]
+							},
+							{
+								"title": "MAPELL",
+								"rows": [
+									{
+										"title": "Senin",
+										"description": "Menampilkan Semua Mapel Hari Senin",
+										"rowId": `${prefix}senin`
+									},
+									{
+										"title": "Selasa",
+										"description": "Menampilkan Semua Mapel Hari Selasa",
+										"rowId": `${prefix}selasa`
+									},
+										{
+										"title": "Rabu",
+										"description": "Menampilkan Semua Mapel Hari Rabu",
+										"rowId": `${prefix}rabu`
+									},
+									{
+										"title": "Kamis",
+										"description": "Menampilkan Semua Mapel Hari Kamis",
+										"rowId": `${prefix}kamis`
+										},
+										{
+											"title": "Jumat",
+										"description": "Menampilkan Semua Mapel Hari Jumat",
+										"rowId": `${prefix}jumat`
+										},
+											{
+											"title": "Sabtu",
+										"description": "Menampilkan Semua Mapel Hari Sabtu",
+										"rowId": `${prefix}sabtu`
+										},
+										]
+										},
+							{
+								"title": "FOTO MAPEL?",
+								"rows": [
+									{
+										"title": "10 A",
+										"description": "Menampilkan Foto Mapel Kelas 10 A",
+										"rowId": `${prefix}fotomapel`
+									}
+								]
+							},
+							{
+								"title": "Info Tentang Owner?",
+								"rows": [
+									{
+										"title": "Chat Owner",
+										"description": "Yang Mau Nomer Owner",
+										"rowId": `${prefix}owner`
+									}
+								]
+							},
+							{
+								"title": "Thanks To",
+								"rows": [
+									{
+										"title": "Contributor",
+										"description": "Menampilkan Orang Yang Ngembangin ChitogeBot",
+										"rowId": `${prefix}thanksto`
+									}
+								]
+							}
+						],
+          listType: 1
+                }
+            }), { userJid: m.chat, quoted: m })
+            amin.ListMsg(m.chat, template.message, { messageId: template.key.id })
+            }
+            break
 case 'senin': {
                 reply('Jam Ke 1 : Character Building *Gus Anam*\nJam Ke 2 : Aswaja *Pak Sumandi*\nJam Ke 3 : Penjas *Bu Evi*\nJam Ke 4 : Penjas *Bu Evi*\nJam Ke 5 : Informatika *Bu Ana*\nJam Ke 6 : Informatika *Bu Ana*\nJam Ke 7 : Ipas IPS *Bu Aisyiyah*\nJam Ke 8 : Ipas IPS *Bu Aisyiyah*')
             }
